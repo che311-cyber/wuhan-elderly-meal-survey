@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="武汉市老年助餐服务消费状况调查问卷（“食”有所依，“餐”暖夕阳课题组）">
+<title>武汉市老年助餐服务消费状况调查问卷</title>
+<style>
+  :root{
+    --primary:#C2410C; --primary-dark:#9A3412; --primary-light:#FDBA74;
+    --accent:#EA580C; --bg:#FFF7ED; --card:#FFFFFF; --text:#292524; --muted:#78716C;
+    --ok:#15803D; --border:#FED7AA; --shadow:0 4px 16px rgba(194,65,12,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--text);font-size:20px;line-height:1.6;
+    display:flex;flex-direction:column;min-height:100vh;
+  }
+  header{
+    background:linear-gradient(135deg,#C2410C,#EA580C 55%,#F59E0B);
+    color:#fff;padding:18px 16px 14px;text-align:center;flex-shrink:0;
+    box-shadow:0 2px 8px rgba(0,0,0,.12);
+  }
+  header h1{font-size:21px;font-weight:700;letter-spacing:.5px}
+  header p{font-size:13px;opacity:.92;margin-top:2px}
+  #progressWrap{height:6px;background:rgba(255,255,255,.25)}
+  #progressBar{height:100%;width:0;background:#fff;transition:width .35s ease;border-radius:0 4px 4px 0}
+  main{flex:1;width:100%;max-width:560px;margin:0 auto;padding:18px 16px 30px;display:flex;flex-direction:column}
+  .card{background:var(--card);border-radius:16px;padding:22px 18px;box-shadow:var(--shadow);border:1px solid var(--border)}
+  .qno{display:inline-block;background:var(--primary);color:#fff;font-size:15px;font-weight:600;
+       border-radius:999px;padding:2px 14px;margin-bottom:12px}
+  .qtext{font-size:22px;font-weight:700;line-height:1.5;margin-bottom:6px}
+  .qhint{font-size:15px;color:var(--muted);margin-bottom:14px}
+  .scaleLegend{font-size:15px;color:var(--muted);background:#FFF7ED;border:1px dashed var(--border);
+       border-radius:10px;padding:8px 12px;margin-bottom:14px;line-height:1.55}
+  .opts{display:flex;flex-direction:column;gap:12px}
+  .opt{
+    display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+    background:#FFFBF5;border:2px solid var(--border);border-radius:14px;
+    padding:14px 16px;font-size:20px;color:var(--text);cursor:pointer;min-height:56px;
+    transition:all .15s ease;font-family:inherit;
+  }
+  .opt:active{transform:scale(.98)}
+  .opt .dot{
+    flex-shrink:0;width:26px;height:26px;border-radius:50%;border:2px solid #D6D3D1;
+    display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);
+    background:#fff;font-weight:600;
+  }
+  .opt.selected{border-color:var(--primary);background:#FFEDD5}
+  .opt.selected .dot{background:var(--primary);border-color:var(--primary);color:#fff}
+  .opt.multi .dot{border-radius:8px}
+  textarea{
+    width:100%;min-height:150px;font-size:19px;font-family:inherit;color:var(--text);
+    border:2px solid var(--border);border-radius:12px;padding:12px;background:#FFFBF5;resize:vertical;
+  }
+  textarea:focus{outline:none;border-color:var(--primary)}
+  #otherText{display:none;width:100%;margin-top:10px;min-height:64px;font-size:18px}
+  nav{display:flex;gap:12px;margin-top:20px}
+  .btn{
+    flex:1;border:none;border-radius:14px;padding:15px 10px;font-size:20px;font-weight:600;
+    cursor:pointer;font-family:inherit;min-height:56px;transition:opacity .15s;
+  }
+  .btn:active{opacity:.85}
+  .btn-back{background:#fff;color:var(--muted);border:2px solid #E7E5E4}
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 3px 10px rgba(194,65,12,.28)}
+  .btn-ghost{background:transparent;color:var(--muted);border:2px dashed #E7E5E4}
+  .err{color:#DC2626;font-size:16px;margin-top:12px;display:none}
+  footer{flex-shrink:0;text-align:center;padding:10px 0 calc(12px + env(safe-area-inset-bottom));font-size:12px;color:#C0A48C}
+  footer a{color:#C0A48C;text-decoration:none}
+  /* welcome */
+  .hero{background:var(--card);border-radius:18px;box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden}
+  .hero-top{background:linear-gradient(135deg,#C2410C,#F59E0B);color:#fff;text-align:center;padding:30px 18px}
+  .hero-top .big{font-size:30px;font-weight:800;letter-spacing:2px}
+  .hero-top .sub{font-size:16px;margin-top:8px;opacity:.95;line-height:1.5}
+  .hero-body{padding:20px 18px}
+  .hero-body h2{font-size:20px;color:var(--primary-dark);margin:14px 0 8px}
+  .hero-body p{font-size:17px;color:#57534E;text-align:justify;margin-bottom:10px}
+  .tag{display:inline-block;background:#FFEDD5;color:var(--primary-dark);border-radius:999px;
+       padding:3px 12px;font-size:14px;margin:2px 4px 2px 0}
+  /* end screens */
+  .endcard{text-align:center;padding:44px 22px}
+  .endcard .icon{font-size:64px;margin-bottom:14px}
+  .endcard h2{font-size:24px;color:var(--primary-dark);margin-bottom:12px}
+  .endcard p{font-size:17px;color:#57534E;text-align:justify}
+  .logo-row{margin-top:18px;font-size:15px;color:var(--muted)}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <h1>武汉市老年助餐服务消费状况调查问卷</h1>
+  <p>“食”有所依 · “餐”暖夕阳 课题组</p>
+  <div id="progressWrap"><div id="progressBar"></div></div>
+</header>
+
+<main id="app"></main>
+
+<footer>
+  匿名填写 · 数据仅用于学术研究 ｜ <a href="javascript:showAdmin()">数据管理</a>
+</footer>
+
+<script>
+/* ================= 问卷定义（正式问卷 v2，共43题） ================= */
+const C_ITEMS = [
+  ["PQ1","菜品新鲜卫生"],["PQ2","口味清淡软烂，适合老年人"],["PQ3","营养搭配合理"],["PQ4","服务人员态度友善"],
+  ["PV1","价格实惠"],["PV2","政府补贴让我得到了实惠"],["PV3","总体物有所值"],
+  ["CV1","离家近"],["CV2","排队时间短"],["CV3","点餐支付方便"],["CV4","能获得送餐上门服务"],
+  ["EX1","整体符合我的期望"],["EX2","比我预想的更好"],
+  ["CA1","本题请选择\u201c比较同意\u201d"],
+  ["SAT1","总体满意"],["SAT2","与期望相比，我感到满意"],["SAT3","总体接近我的理想"],
+  ["CI1","我会继续使用老年助餐服务"],["CI2","我会增加使用频次"],
+  ["RI1","我愿意向亲友推荐"],["RI2","我愿意对外正面评价"]
+];
+const SCALE5 = ["非常不同意","不太同意","一般","比较同意","非常同意"];
+const Q = {
+  S1:{sec:"第一部分 · 筛选题",text:"您的年龄：",opts:["60周岁以下","60周岁及以上"]},
+  S2:{sec:"第一部分 · 筛选题",text:"您在武汉市连续居住的时间：",opts:["不满6个月","满6个月"]},
+  A1:{sec:"第二部分 · 基本情况",text:"您的性别：",opts:["男","女"]},
+  A2:{sec:"第二部分 · 基本情况",text:"您的年龄：",opts:["60—69岁","70—79岁","80岁及以上"]},
+  A3:{sec:"第二部分 · 基本情况",text:"您的居住方式：",opts:["与配偶同住","独居","与子女同住","其他"]},
+  A4:{sec:"第二部分 · 基本情况",text:"您的个人月均收入：",opts:["2000元以下","2000—4000元","4000—6000元","6000元以上"]},
+  A5:{sec:"第二部分 · 基本情况",text:"您的健康状况自评：",opts:["较好及以上","一般","较差及以下"]},
+  A6:{sec:"第二部分 · 基本情况",text:"您是否患有慢性病：",opts:["是","否"]},
+  A7:{sec:"第二部分 · 基本情况",text:"您从家步行至最近的老年助餐点大约需要：",opts:["10分钟以内","10—20分钟","20分钟以上或不清楚"]},
+  B1:{sec:"第三部分 · 认知与使用",text:"您是否知晓老年助餐服务（如社区幸福食堂、老年助餐点、长者饭堂等）？",opts:["知晓","不知晓"]},
+  B2:{sec:"第三部分 · 认知与使用",text:"您是通过什么渠道知晓老年助餐服务的？",opts:["社区宣传","亲友邻居","路过看到","网络平台","其他"]},
+  B3:{sec:"第三部分 · 认知与使用",text:"近3个月，您是否使用过老年助餐服务？",opts:["使用过","未使用过"]},
+  B4:{sec:"第三部分 · 认知与使用",text:"您使用老年助餐服务的频次大约为：",opts:["每周3次及以上","每周1—2次","每月1—3次","偶尔使用"]},
+  B5:{sec:"第三部分 · 认知与使用",text:"您平均每餐实际支付的金额大约为：",opts:["8元及以下","9—12元","13—18元","18元以上"]},
+  B6:{sec:"第三部分 · 认知与使用",text:"您未使用老年助餐服务的原因有哪些？",multi:true,opts:["习惯自己做饭","距离远不方便","担心价格偏高","担心口味不合","菜品单一","不了解具体情况","担心卫生","其他"]},
+  B7:{sec:"第三部分 · 认知与使用",text:"未来6个月，您使用老年助餐服务的意愿如何？",opts:["很不愿意","不太愿意","一般","比较愿意","很愿意"]},
+  D1:{sec:"第五部分 · 潜在需求",text:"您可接受的每餐价格预期为：",opts:["8元及以下","9—12元","13—18元","18元以上","说不好"]},
+  D2:{sec:"第五部分 · 潜在需求",text:"您对助餐菜品口味的顾虑程度：",opts:["完全没有顾虑","不太有顾虑","一般","比较有顾虑","非常有顾虑"]},
+  D3:{sec:"第五部分 · 潜在需求",text:"您对老年助餐服务的了解程度：",opts:["完全不了解","不太了解","一般","比较了解","非常了解"]},
+  D4:{sec:"第五部分 · 潜在需求",text:"您是否知晓政府对老年助餐服务的补贴政策：",opts:["是","否"]},
+  D5:{sec:"第五部分 · 潜在需求",text:"您对送餐上门服务的需求程度：",opts:["完全不需要","不太需要","一般","比较需要","非常需要"]},
+  E1:{sec:"第六部分 · 开放建议",text:"您对老年助餐服务的意见或建议：",open:true}
+};
+C_ITEMS.forEach(function(it){ Q[it[0]]={sec:"第四部分 · 满意度评价",scale:true,text:it[1]}; });
+Q.CA1.special=true;
+
+const C_IDS = C_ITEMS.map(function(x){return x[0];});
+const D_IDS = ["D1","D2","D3","D4","D5"];
+const FLOW_LABEL = {
+  S1:"S1",S2:"S2",A1:"A1",A2:"A2",A3:"A3",A4:"A4",A5:"A5",A6:"A6",A7:"A7",
+  B1:"B1",B2:"B2",B3:"B3",B4:"B4",B5:"B5",B6:"B6",B7:"B7",
+  D1:"D1",D2:"D2",D3:"D3",D4:"D4",D5:"D5",E1:"E1"
+};
+C_IDS.forEach(function(id){FLOW_LABEL[id]=id;});
+
+/* ================= 状态 ================= */
+var answers = {};        /* id -> option index / array of index / text */
+var visited = [];        /* 已访问题目id栈 */
+var current = null;
+var startedAt = null;
+var ended = false;
+var advancing = false;   /* 防止连点重复跳题 */
+
+function nextOf(id){
+  var a = answers;
+  switch(id){
+    case "S1": return a.S1===0 ? "END_AGE" : "S2";
+    case "S2": return a.S2===0 ? "END_LIVE" : "A1";
+    case "A1": return "A2"; case "A2": return "A3"; case "A3": return "A4";
+    case "A4": return "A5"; case "A5": return "A6"; case "A6": return "A7";
+    case "A7": return "B1";
+    case "B1": return a.B1===1 ? "B3" : "B2";
+    case "B2": return "B3";
+    case "B3": return a.B3===0 ? "B4" : "B6";
+    case "B4": return "B5";
+    case "B5": return C_IDS[0];
+    case "B6": return "B7";
+    case "B7": return D_IDS[0];
+    case "D1": return "D2"; case "D2": return "D3"; case "D3": return "D4"; case "D4": return "D5";
+    case "D5": return "E1";
+    case "E1": return "END_OK";
+  }
+  var i = C_IDS.indexOf(id);
+  if(i>=0 && i<C_IDS.length-1) return C_IDS[i+1];
+  if(id===C_IDS[C_IDS.length-1]) return "E1";
+  return "END_OK";
+}
+/* 分支题改答时清理下游 */
+function clearDownstream(id){
+  var kill = [];
+  if(id==="B1") kill.push("B2");
+  if(id==="B3"){
+    if(answers.B3===0){ kill=kill.concat(["B6","B7"],D_IDS); }
+    else{ kill=kill.concat(["B4","B5"],C_IDS); }
+  }
+  kill.forEach(function(k){ delete answers[k]; });
+}
+/* 模拟完整路径（未答分支按最长路径估计），用于进度条 */
+function simulatePath(){
+  var p=[], id="S1", guard=0;
+  var sim = Object.assign({},answers);
+  while(id && guard++<80){
+    if(id.indexOf("END")===0){ p.push(id); break; }
+    if(id==="B1"&&sim.B1===undefined){ sim.B1=0; }
+    if(id==="B3"&&sim.B3===undefined){ sim.B3=0; }
+    p.push(id);
+    var save=answers; answers=sim;
+    var nid=nextOf(id);
+    answers=save;
+    if(nid==="END_AGE"||nid==="END_LIVE"){ p.push(nid); break; }
+    id=nid;
+  }
+  return p;
+}
+function updateProgress(){
+  var p=simulatePath();
+  var answered=0;
+  for(var i=0;i<p.length;i++){ if(answers[p[i]]!==undefined) answered++; }
+  var total=Math.max(p.length,1);
+  var pct=Math.min(100,Math.round(answered/total*100));
+  document.getElementById("progressBar").style.width=pct+"%";
+}
+
+/* ================= 渲染 ================= */
+var app=document.getElementById("app");
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+function renderWelcome(){
+  current=null; updateProgress();
+  app.innerHTML =
+  '<div class="hero">'+
+    '<div class="hero-top"><div class="big">“食”有所依 “餐”暖夕阳</div>'+
+    '<div class="sub">武汉市老年助餐服务消费状况调查</div></div>'+
+    '<div class="hero-body">'+
+      '<h2>卷首语</h2>'+
+      '<p>亲爱的老年朋友：您好！为深入了解武汉市老年助餐服务的消费状况，倾听老年朋友的真实感受与需求，本团队开展本次学术调查。</p>'+
+      '<p>本问卷采用<span style="color:#C2410C;font-weight:700">匿名</span>方式填写，不询问您的姓名与联系方式，您填写的所有数据仅用于学术研究，我们将严格保密，请您放心作答。问卷填写约需6—9分钟。您的每一份回答，都是帮助我们研究如何让老年助餐服务办得更好的宝贵依据。衷心感谢您的支持与配合！</p>'+
+      '<div style="margin:10px 0 4px"><span class="tag">匿名填写</span><span class="tag">无对错之分</span><span class="tag">可随时修改</span></div>'+
+      '<h2>填答说明</h2>'+
+      '<p>① 本问卷面向60周岁及以上、在武汉市连续居住满6个月的老年朋友，请由本人填答。</p>'+
+      '<p>② 请按题目顺序作答，系统会根据您的情况自动跳过不适用的题目。</p>'+
+      '<p>③ 所有题目均无对错之分，请根据您的真实情况与真实感受填写。</p>'+
+      '<div style="text-align:center;margin-top:18px">'+
+        '<button class="btn btn-primary" style="width:100%;font-size:22px" onclick="startSurvey()">开始作答</button>'+
+      '</div>'+
+      '<div class="logo-row" style="margin-top:16px">武汉市老年助餐服务消费状况调查团队 · 2026年11月</div>'+
+    '</div>'+
+  '</div>';
+  document.getElementById("progressWrap").style.visibility="hidden";
+}
+function startSurvey(){
+  startedAt = Date.now();
+  document.getElementById("progressWrap").style.visibility="visible";
+  visited=["S1"]; current="S1"; renderQuestion();
+}
+function renderQuestion(){
+  var q=Q[current]; if(!q){ renderEnd("END_OK"); return; }
+  updateProgress();
+  var html='<div class="card">'+
+    '<span class="qno">'+esc(FLOW_LABEL[current])+'　'+esc(q.sec)+'</span>'+
+    '<div class="qtext">'+esc(q.text)+(q.multi?'　<span style="color:#C2410C;font-size:16px">［多选］</span>':'')+'</div>';
+  if(q.scale){
+    html+='<div class="scaleLegend">请根据您在助餐点就餐的真实感受选择：<b>1=非常不同意，2=不太同意，3=一般，4=比较同意，5=非常同意</b>，每行限选一项。</div>';
+  }
+  if(q.open){
+    html+='<textarea id="openText" placeholder="请写下您的意见或建议（选填，可不填）">'+esc(answers[current]||"")+'</textarea>';
+    html+='<nav><button class="btn btn-back" onclick="goBack()">上一题</button>'+
+          '<button class="btn btn-primary" onclick="submitOpen()">提交问卷</button></nav>';
+  }else{
+    html+='<div class="opts">';
+    var sel = answers[current];
+    q.opts.forEach(function(o,i){
+      var isSel = q.multi ? (Array.isArray(sel)&&sel.indexOf(i)>=0) : (sel===i);
+      html+='<button class="opt'+(q.multi?' multi':'')+(isSel?' selected':'')+'" data-i="'+i+'" onclick="pick('+i+')">'+
+            '<span class="dot">'+(isSel?'✓':(i+1))+'</span><span>'+esc(o)+'</span></button>';
+    });
+    html+='</div>';
+    if(current==="B6"){
+      var otherSel = Array.isArray(sel)&&sel.indexOf(7)>=0;
+      html+='<textarea id="otherText" style="display:'+(otherSel?'block':'none')+'" placeholder="其他原因，请补充说明（选填）">'+esc(answers["B6_other"]||"")+'</textarea>';
+    }
+    html+='<nav><button class="btn btn-back" onclick="goBack()">'+(visited.length>1?'上一题':'返回')+'</button>'+
+          (q.multi?'<button class="btn btn-primary" onclick="nextMulti()">下一题</button>':'')+
+          '</nav><div class="err" id="err">请至少选择一项后继续</div>';
+  }
+  html+='</div>';
+  app.innerHTML=html;
+  window.scrollTo(0,0);
+}
+function pick(i){
+  var q=Q[current];
+  if(q.multi){
+    var arr=Array.isArray(answers[current])?answers[current].slice():[];
+    var ix=arr.indexOf(i);
+    if(ix>=0) arr.splice(ix,1); else arr.push(i);
+    answers[current]=arr.length?arr.sort():undefined;
+    if(current==="B6"&&!answers[current]) delete answers["B6_other"];
+    renderQuestion();
+    return;
+  }
+  if(advancing) return;
+  advancing=true;
+  answers[current]=i;
+  if(current==="B1"||current==="B3") clearDownstream(current);
+  /* 重新渲染选中态后自动进入下一题 */
+  renderQuestion();
+  setTimeout(function(){
+    advancing=false;
+    var nx=nextOf(current);
+    if(nx.indexOf("END")===0){ renderEnd(nx); return; }
+    visited.push(nx); current=nx; renderQuestion();
+  },320);
+}
+function nextMulti(){
+  var q=Q[current];
+  var v=answers[current];
+  if(!Array.isArray(v)||v.length===0){ document.getElementById("err").style.display="block"; return; }
+  document.getElementById("err").style.display="none";
+  if(current==="B6"){
+    var ot=document.getElementById("otherText");
+    answers["B6_other"]= ot&&ot.value.trim()?ot.value.trim():undefined;
+    if(v.indexOf(7)<0) delete answers["B6_other"];
+  }
+  var nx=nextOf(current);
+  if(nx.indexOf("END")===0){ renderEnd(nx); return; }
+  visited.push(nx); current=nx; renderQuestion();
+}
+function submitOpen(){
+  var t=document.getElementById("openText");
+  answers["E1"]=t&&t.value.trim()?t.value.trim():undefined;
+  renderEnd("END_OK");
+}
+function goBack(){
+  advancing=false;
+  if(visited.length<=1){ renderWelcome(); return; }
+  visited.pop();
+  current=visited[visited.length-1];
+  if(current.indexOf("END")===0){ visited.pop(); renderWelcome(); return; }
+  renderQuestion();
+}
+
+/* ================= 结束页 ================= */
+function renderEnd(kind){
+  ended=true; updateProgress();
+  var inner="";
+  if(kind==="END_AGE"||kind==="END_LIVE"){
+    inner='<div class="icon">🙏</div><h2>感谢您的参与</h2>'+
+      '<p>'+ (kind==="END_AGE"?"本次调查面向60周岁及以上的老年朋友。":"本次调查面向在武汉市连续居住满6个月的朋友。") +
+      '问卷到此结束，祝您身体健康，生活愉快！</p>'+
+      '<div class="logo-row">武汉市老年助餐服务消费状况调查团队</div>'+
+      '<nav><button class="btn btn-ghost" onclick="resetAll()">返回首页</button></nav>';
+    saveRecord(kind==="END_AGE"?"terminated_age":"terminated_live");
+  }else{
+    inner='<div class="icon">✅</div><h2>问卷提交成功！</h2>'+
+      '<p>本问卷到此结束，再次衷心感谢您的支持与配合！您的每一份回答，都是我们研究如何让老年助餐服务办得更好的宝贵依据。</p>'+
+      '<p style="text-align:center;margin-top:10px;color:#15803D;font-weight:700">祝您身体健康，生活愉快！</p>'+
+      '<div class="logo-row">“食”有所依 · “餐”暖夕阳 课题组　武汉市老年助餐服务消费状况调查团队</div>'+
+      '<nav><button class="btn btn-ghost" onclick="resetAll()">完成</button></nav>';
+    saveRecord("complete");
+  }
+  app.innerHTML='<div class="card endcard">'+inner+'</div>';
+  window.scrollTo(0,0);
+}
+function resetAll(){
+  answers={}; visited=[]; current=null; startedAt=null; ended=false; advancing=false;
+  renderWelcome();
+}
+
+/* ================= 数据保存与管理 ================= */
+function saveRecord(status){
+  try{
+    if(status==="complete" && !startedAt) return;
+    var rec={
+      id:new Date().toISOString().replace(/[-:T]/g,"").slice(0,14)+String(Math.floor(Math.random()*90+10)),
+      status:status,
+      startedAt:startedAt?new Date(startedAt).toLocaleString("zh-CN"):null,
+      submittedAt:new Date().toLocaleString("zh-CN"),
+      durationSec:startedAt?Math.round((Date.now()-startedAt)/1000):null,
+      ca1Pass:answers["CA1"]===3,
+      quickAnswer:startedAt?((Date.now()-startedAt)/1000<120):null,
+      answers:JSON.parse(JSON.stringify(answers))
+    };
+    var list=JSON.parse(localStorage.getItem("survey_responses_v1")||"[]");
+    list.push(rec);
+    localStorage.setItem("survey_responses_v1",JSON.stringify(list));
+  }catch(e){/* localStorage 不可用时静默 */}
+}
+function optLabel(qid,i){ return Q[qid]?Q[qid].opts[i]:("选项"+(i+1)); }
+function showAdmin(){
+  var list=JSON.parse(localStorage.getItem("survey_responses_v1")||"[]");
+  var rows=list.map(function(r,i){
+    return "<tr><td>"+(i+1)+"</td><td>"+r.submittedAt+"</td><td>"+r.status+"</td><td>"+(r.durationSec||"-")+"秒</td></tr>";
+  }).join("");
+  app.innerHTML='<div class="card">'+
+    '<h2 style="font-size:22px;color:#9A3412;margin-bottom:6px">数据管理（本机）</h2>'+
+    '<p class="qhint">按《调查方案》质量控制要求：作答时长低于120秒、注意力检测题（CA1）未选“比较同意”的问卷，建议在整理阶段复核剔除。</p>'+
+    '<p style="font-size:17px;margin:10px 0">本机已保存 <b style="color:#C2410C;font-size:22px">'+list.length+'</b> 份记录</p>'+
+    '<div style="max-height:220px;overflow:auto;border:1px solid #FED7AA;border-radius:10px;margin-bottom:14px">'+
+    '<table style="width:100%;border-collapse:collapse;font-size:14px;text-align:center">'+
+    '<tr style="background:#FFEDD5"><th style="padding:6px">#</th><th>提交时间</th><th>状态</th><th>时长</th></tr>'+(rows||'<tr><td colspan="4" style="padding:12px;color:#78716C">暂无数据</td></tr>')+'</table></div>'+
+    '<nav><button class="btn btn-primary" onclick="exportCSV()">导出 CSV</button></nav>'+
+    '<nav><button class="btn btn-ghost" onclick="clearData()">清空本机数据</button>'+
+    '<button class="btn btn-back" onclick="location.reload()">返回问卷</button></nav>'+
+    '<p class="qhint" style="margin-top:12px">提示：数据仅保存在当前设备浏览器中。正式收数建议接入云端数据库，导出文件请妥善保管。</p>'+
+    '</div>';
+}
+function clearData(){
+  if(confirm("确认清空本机保存的全部问卷数据？此操作不可恢复。")){
+    localStorage.removeItem("survey_responses_v1");
+    showAdmin();
+  }
+}
+function exportCSV(){
+  var list=JSON.parse(localStorage.getItem("survey_responses_v1")||"[]");
+  var ids=["S1","S2","A1","A2","A3","A4","A5","A6","A7","B1","B2","B3","B4","B5","B6","B6_other","B7"]
+    .concat(C_IDS).concat(D_IDS).concat(["E1"]);
+  var head=["记录ID","状态","开始时间","提交时间","时长(秒)","CA1通过","快速作答(<120秒)"].concat(ids);
+  var lines=[head.join(",")];
+  list.forEach(function(r){
+    var row=[r.id,r.status,r.startedAt||"",r.submittedAt,r.durationSec||"",r.ca1Pass?"是":"否",r.quickAnswer?"是":"否"];
+    ids.forEach(function(qid){
+      var v=r.answers?r.answers[qid]:undefined;
+      if(v===undefined){row.push("");return;}
+      if(Array.isArray(v)){ row.push('"'+v.map(function(i){return optLabel(qid,i);}).join("｜")+'"'); }
+      else if(Q[qid]&&Q[qid].opts){ row.push('"'+optLabel(qid,v)+'"'); }
+      else{ row.push('"'+String(v).replace(/"/g,'""')+'"'); }
+    });
+    lines.push(row.join(","));
+  });
+  var blob=new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"});
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="武汉市老年助餐调查问卷数据_"+new Date().toISOString().slice(0,10)+".csv";
+  a.click();
+}
+
+/* ================= 启动 ================= */
+renderWelcome();
+</script>
+</body>
+</html>
