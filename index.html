@@ -266,7 +266,8 @@ function renderQuestion(){
   }else{
     html+='<div class="opts">';
     var sel = answers[current];
-    q.opts.forEach(function(o,i){
+    var opts = q.scale ? SCALE5 : q.opts;
+    opts.forEach(function(o,i){
       var isSel = q.multi ? (Array.isArray(sel)&&sel.indexOf(i)>=0) : (sel===i);
       html+='<button class="opt'+(q.multi?' multi':'')+(isSel?' selected':'')+'" data-i="'+i+'" onclick="pick('+i+')">'+
             '<span class="dot">'+(isSel?'✓':(i+1))+'</span><span>'+esc(o)+'</span></button>';
@@ -382,7 +383,11 @@ function saveRecord(status){
     localStorage.setItem("survey_responses_v1",JSON.stringify(list));
   }catch(e){/* localStorage 不可用时静默 */}
 }
-function optLabel(qid,i){ return Q[qid]?Q[qid].opts[i]:("选项"+(i+1)); }
+function optLabel(qid,i){
+  var q=Q[qid];
+  if(!q) return "选项"+(i+1);
+  return q.scale ? SCALE5[i] : (q.opts ? q.opts[i] : "选项"+(i+1));
+}
 function showAdmin(){
   var list=JSON.parse(localStorage.getItem("survey_responses_v1")||"[]");
   var rows=list.map(function(r,i){
